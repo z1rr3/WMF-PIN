@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="VMF PIN">
+  <title>VMF-1500S PIN-generator</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 20px;
+      margin: 0;
+      max-width: 400px;
+      margin: auto;
+      background-color: #f2f2f2;
+    }
+    h1 {
+      font-size: 1.5em;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      font-size: 1.2em;
+      padding: 5px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      font-size: 1.2em;
+      padding: 10px;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+    #pinOutput {
+      margin-top: 20px;
+      font-size: 2em;
+      text-align: center;
+      font-weight: bold;
+      color: #007000;
+    }
+  </style>
+</head>
+<body>
+  <h1>VMF-1500S PIN-generator</h1>
+
+  <label for="month">Månad:</label>
+  <input type="number" id="month" min="1" max="12">
+
+  <label for="day">Dag:</label>
+  <input type="number" id="day" min="1" max="31">
+
+  <label for="hour">Timme (0–23):</label>
+  <input type="number" id="hour" min="0" max="23">
+
+  <button onclick="generatePIN()">Generera PIN</button>
+
+  <div id="pinOutput">---</div>
+
+  <script>
+    function pad2(num) {
+      return num.toString().padStart(2, '0');
+    }
+
+    function reverseTwoDigit(num) {
+      return pad2(num).split('').reverse().join('');
+    }
+
+    function generatePIN() {
+      const month = parseInt(document.getElementById('month').value, 10);
+      const day = parseInt(document.getElementById('day').value, 10);
+      const hour = parseInt(document.getElementById('hour').value, 10);
+
+      const revMonth = reverseTwoDigit(month);
+      const revDay = reverseTwoDigit(day);
+      const revHour = reverseTwoDigit(hour);
+
+      const pin = revMonth + revDay + revHour;
+      document.getElementById('pinOutput').textContent = pin;
+    }
+
+    function autofillDateTime() {
+      const now = new Date();
+      document.getElementById('month').value = now.getMonth() + 1;
+      document.getElementById('day').value = now.getDate();
+      document.getElementById('hour').value = now.getHours();
+      generatePIN();
+    }
+
+    window.onload = autofillDateTime;
+  </script>
+</body>
+</html>
